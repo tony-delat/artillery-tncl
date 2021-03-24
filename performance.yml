@@ -1,0 +1,31 @@
+config:
+  target: "https://api.todoist.com"
+  phases:
+    - duration: 3
+      arrivalRate: 1
+      name: "Phase 1"
+  defaults:
+   headers:
+     Authorization: Bearer {{ $processEnvironment.TOKEN }}
+     Content-type: application/json
+  ##processor: "./myProcessor.js"
+scenarios:
+  - flow:
+      - get:
+          url: "/rest/v1/projects"
+      - post:
+          url: "/rest/v1/projects"
+          json:
+            name: "Demo"
+          capture:
+            json: "$.id"
+            as: "id"
+      - log: "Current Project ID is {{ id }}"
+      - get:
+          url: "/rest/v1/projects/{{ id }}"
+      - post:
+          url: "/rest/v1/projects/{{ id }}"
+          json:
+            name: "Tonycol"
+  # For more information: https://artillery.io/docs/script-reference/
+# For more information: https://artillery.io/docs/script-reference/
